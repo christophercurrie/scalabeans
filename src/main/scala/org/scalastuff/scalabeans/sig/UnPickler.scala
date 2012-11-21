@@ -17,8 +17,8 @@ package org.scalastuff.scalabeans.sig
 import scala.reflect.ScalaSignature
 import scala.reflect.ScalaLongSignature
 import java.nio.charset.Charset
-import scala.reflect.generic.ByteCodecs
-import scala.reflect.generic.PickleFormat
+import scala.reflect.internal.pickling.ByteCodecs
+import scala.reflect.internal.pickling.PickleFormat
 import annotation.switch
 import java.util.Arrays
 import scala.collection.mutable.ArrayBuffer

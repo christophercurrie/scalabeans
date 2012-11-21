@@ -6,3 +6,6 @@
 /lib_managed
 /bin
 /mavenrepo
+/.idea
+*.iml
+
