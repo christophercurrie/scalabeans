@@ -21,6 +21,7 @@ import com.thoughtworks.paranamer.BytecodeReadingParanamer
 import collection.JavaConversions._
 import Preamble._
 import org.scalastuff.scalabeans.types.ScalaType
+import org.scalastuff.scalabeans.compat.ConstructorPattern
 
 object BeanIntrospector {
   def apply[T <: AnyRef](mf: Manifest[_]): BeanDescriptor = apply[T](Preamble.scalaTypeOf(mf))
@@ -71,7 +72,7 @@ object BeanIntrospector {
 
       val defaultValueMethod =
         if (ctorIndex < 0) None
-        else beanType.erasure.getMethods.find(_.getName == "init$default$" + (ctorIndex + 1))
+        else beanType.erasure.getMethods.find(_.getName == ConstructorPattern + (ctorIndex + 1))
 
       val descriptor = PropertyDescriptor(beanType, tag, mutablePropertyPosition, field, getter, setter, ctorIndex, defaultValueMethod)
       if (descriptor.isInstanceOf[MutablePropertyDescriptor] && !descriptor.isInstanceOf[ConstructorParameter])
@@ -149,7 +150,7 @@ object BeanIntrospector {
   		println(prefix + "    " + f.getName + static(f.getModifiers))
   	}
   	println(prefix + "  Enum Values: ")
-  	for (f <- c.getMethods filter (m => m.getParameterTypes.isEmpty && classOf[Enumeration$Value].isAssignableFrom(m.getReturnType))) {
+  	for (f <- c.getMethods filter (m => m.getParameterTypes.isEmpty && classOf[Enumeration#Value].isAssignableFrom(m.getReturnType))) {
   		val instance = new Enumeration{}
   		println(prefix + "    a" )
   	}

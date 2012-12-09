@@ -15,9 +15,9 @@
  */
 package org.scalastuff.scalabeans.sig
 
-import scala.reflect.generic.{ PickleBuffer => PoorPickleBuffer }
+import org.scalastuff.scalabeans.compat.PoorPickleBuffer
 import java.nio.charset.Charset
-import scala.reflect.generic.Flags
+import org.scalastuff.scalabeans.compat.Flags
 
 class PickleBuffer(bytes: Array[Byte]) {
   final val UTF8 = Charset.forName("UTF-8")

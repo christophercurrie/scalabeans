@@ -18,7 +18,7 @@ package org.scalastuff.scalabeans.sig
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 
-import scala.reflect.generic.Flags._
+import org.scalastuff.scalabeans.compat.Flags._
 import com.google.common.collect.MapMaker
 
 /**
