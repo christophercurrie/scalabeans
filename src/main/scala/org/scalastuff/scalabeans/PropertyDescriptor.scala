@@ -84,7 +84,7 @@ trait DeserializablePropertyDescriptor extends PropertyDescriptor {
 trait MutablePropertyDescriptor extends DeserializablePropertyDescriptor {
   val mutable = true
 
-  def set(obj: AnyRef, value: Any): Unit
+  def set(obj: AnyRef, value: Any)
 
   //  def javaSet(obj: AnyRef, value: AnyRef): Unit
 }
@@ -103,13 +103,27 @@ trait ConstructorParameter extends DeserializablePropertyDescriptor {
 trait FieldPropertyDescriptor extends PropertyDescriptor {
   def field: Field
 }
+object FieldPropertyDescriptor {
+  def unapply(fpd: FieldPropertyDescriptor): Option[Field] = Some(fpd.field)
+}
 
 trait GetterPropertyDescriptor extends PropertyDescriptor {
   def getter: Method
 }
+object GetterPropertyDescriptor {
+  def unapply(gpd: GetterPropertyDescriptor): Option[Method] = Some(gpd.getter)
+}
 
-trait GetterSetterPropertyDescriptor extends GetterPropertyDescriptor {
+trait SetterPropertyDescriptor extends PropertyDescriptor {
   def setter: Method
+}
+object SetterPropertyDescriptor {
+  def unapply(spd: SetterPropertyDescriptor): Option[Method] = Some(spd.setter)
+}
+
+trait GetterSetterPropertyDescriptor extends GetterPropertyDescriptor with SetterPropertyDescriptor
+object GetterSetterPropertyDescriptor {
+  def unapply(gspd: GetterSetterPropertyDescriptor): Option[(Method, Method)] = Some((gspd.getter, gspd.setter))
 }
 
 object PropertyDescriptor {
@@ -155,6 +169,12 @@ object PropertyDescriptor {
       }
     }
 
+    def fieldGetterPropertyDescriptor(field: Field, getter: Method, typeHint: Option[ScalaType], ctorParameterIndex: Int) = {
+      if (ctorParameterIndex < 0) {
+
+      }
+    }
+
     def getterPropertyDescriptor(getter: Method, typeHint: Option[ScalaType], ctorParameterIndex: Int) = {
       if (ctorParameterIndex < 0) {
         new GetterPropertyDescriptorImpl(getter, typeHint)
@@ -191,7 +211,7 @@ object PropertyDescriptor {
     abstract class MutableFieldPropertyDescriptor(field: Field, typeHint: Option[ScalaType])
       extends FieldPropertyDescriptorImpl(field, typeHint) with MutablePropertyDescriptor {
 
-      def set(obj: AnyRef, value: Any) = field.set(obj, value)
+      def set(obj: AnyRef, value: Any) { field.set(obj, value) }
     }
 
     //
@@ -214,7 +234,7 @@ object PropertyDescriptor {
     abstract class GetterSetterPropertyDescriptorImpl(getter: Method, val setter: Method, typeHint: Option[ScalaType]) extends MethodPropertyDescriptor(getter, typeHint) with MutablePropertyDescriptor with GetterSetterPropertyDescriptor {
       setter.setAccessible(true)
 
-      def set(obj: AnyRef, value: Any): Unit = setter.invoke(obj, value.asInstanceOf[AnyRef])
+      def set(obj: AnyRef, value: Any) { setter.invoke(obj, value.asInstanceOf[AnyRef]) }
     }
 
     val propertyTypeHint = _beanType match {

@@ -26,7 +26,7 @@ trait BeanDescriptor {
   /**
    * @return bean class name
    */
-  def name = beanType.erasure.getName()
+  def name = beanType.erasure.getName
   
   /**
    * Encapsulates bean class
